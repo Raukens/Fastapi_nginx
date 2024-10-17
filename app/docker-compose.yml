@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi_app
+    expose:
+      - "8000"  # FastAPI работает на порту 8000
+    networks:
+      - my_network
+
+  nginx:
+    build:
+      context: ./nginx  # Путь к Nginx Dockerfile
+      dockerfile: Dockerfile
+    container_name: nginx_proxy
+    ports:
+      - "1337:80"  # Прокидываем порт для доступа извне
+    depends_on:
+      - app
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
